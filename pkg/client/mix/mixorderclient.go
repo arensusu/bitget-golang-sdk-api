@@ -159,6 +159,18 @@ func (p *MixOrderClient) Current(symbol string) (string, error) {
 
 }
 
+func (p *MixOrderClient) AllOpenOrder(productType string, marginCoin string) (string, error) {
+	params := internal.NewParams()
+	params["productType"] = productType
+	params["marginCoin"] = marginCoin
+
+	uri := constants.MixOrder + "/marginCoinCurrent"
+
+	resp, err := p.BitgetRestClient.DoGet(uri, params)
+
+	return resp, err
+}
+
 /**
  * Get order details
  * @param symbol
