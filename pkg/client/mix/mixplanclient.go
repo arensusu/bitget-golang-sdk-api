@@ -142,6 +142,22 @@ func (p *MixPlanClient) CancelPlan(params plan.CancelPlanReq) (string, error) {
 
 }
 
+func (p *MixPlanClient) CancelPlanBySymbol(params plan.CancelPlanBySymbolReq) (string, error) {
+
+	postBody, jsonErr := internal.ToJson(params)
+
+	if jsonErr != nil {
+		return "", jsonErr
+	}
+
+	uri := constants.MixPlan + "/cancelSymbolPlan"
+
+	resp, err := p.BitgetRestClient.DoPost(uri, postBody)
+
+	return resp, err
+
+}
+
 /**
  * Planned entrustment (profit and loss stop) cancellation
  * @param CancelPlanReq
