@@ -1,9 +1,8 @@
 package common
 
 import (
-	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strings"
 	"time"
@@ -20,6 +19,11 @@ type BitgetRestClient struct {
 	BaseUrl      string
 	HttpClient   *http.Client
 	Signer       *Signer
+}
+
+type CommonResponse struct {
+	Code string `json:"code"`
+	Msg  string `json:"msg"`
 }
 
 func (p *BitgetRestClient) Init() *BitgetRestClient {
@@ -62,7 +66,7 @@ func (p *BitgetRestClient) DoPost(uri string, params string) (string, error) {
 
 	defer response.Body.Close()
 
-	bodyStr, err := ioutil.ReadAll(response.Body)
+	bodyStr, err := io.ReadAll(response.Body)
 	if err != nil {
 		return "", err
 	}
@@ -70,7 +74,7 @@ func (p *BitgetRestClient) DoPost(uri string, params string) (string, error) {
 	responseBodyString := string(bodyStr)
 
 	if response.StatusCode != 200 {
-		return "", errors.New(fmt.Sprintf("StatusCode: %d, error: %v", response.StatusCode, responseBodyString))
+		return "", fmt.Errorf("StatusCode: %d, error: %v", response.StatusCode, responseBodyString)
 	}
 
 	return responseBodyString, err
@@ -98,7 +102,7 @@ func (p *BitgetRestClient) DoGet(uri string, params map[string]string) (string, 
 
 	defer response.Body.Close()
 
-	bodyStr, err := ioutil.ReadAll(response.Body)
+	bodyStr, err := io.ReadAll(response.Body)
 	if err != nil {
 		return "", err
 	}
@@ -106,7 +110,7 @@ func (p *BitgetRestClient) DoGet(uri string, params map[string]string) (string, 
 	responseBodyString := string(bodyStr)
 
 	if response.StatusCode != 200 {
-		return "", errors.New(fmt.Sprintf("StatusCode: %d, error: %v", response.StatusCode, responseBodyString))
+		return "", fmt.Errorf("StatusCode: %d, error: %v", response.StatusCode, responseBodyString)
 	}
 
 	return responseBodyString, err

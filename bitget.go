@@ -83,6 +83,12 @@ func (c *Client) GetMixTraceService() *mix.MixTraceClient {
 }
 
 // spot
+func (c *Client) NewSpotAccountAssetsService() *spot.SpotGetAccountAssetsService {
+	return &spot.SpotGetAccountAssetsService{
+		Client: c.client,
+	}
+}
+
 func (c *Client) GetSpotAccountService() *spot.SpotAccountClient {
 	return c.spotAccountService
 }
