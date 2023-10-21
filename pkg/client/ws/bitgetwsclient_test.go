@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/outtoin/bitget-golang-sdk-api/internal/model"
+	"github.com/arensusu/bitget-golang-sdk-api/internal/model"
 )
 
 func TestBitgetWsClient_New(t *testing.T) {

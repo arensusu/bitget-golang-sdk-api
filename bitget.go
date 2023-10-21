@@ -4,12 +4,12 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/outtoin/bitget-golang-sdk-api/internal/common"
-	"github.com/outtoin/bitget-golang-sdk-api/internal/model"
-	"github.com/outtoin/bitget-golang-sdk-api/pkg/client/broker"
-	"github.com/outtoin/bitget-golang-sdk-api/pkg/client/mix"
-	"github.com/outtoin/bitget-golang-sdk-api/pkg/client/spot"
-	"github.com/outtoin/bitget-golang-sdk-api/pkg/client/ws"
+	"github.com/arensusu/bitget-golang-sdk-api/internal/common"
+	"github.com/arensusu/bitget-golang-sdk-api/internal/model"
+	"github.com/arensusu/bitget-golang-sdk-api/pkg/client/broker"
+	"github.com/arensusu/bitget-golang-sdk-api/pkg/client/mix"
+	"github.com/arensusu/bitget-golang-sdk-api/pkg/client/spot"
+	"github.com/arensusu/bitget-golang-sdk-api/pkg/client/ws"
 )
 
 // client
@@ -38,17 +38,17 @@ func NewClient() *Client {
 	return &Client{
 		client: bc,
 
-		brokerService:      &broker.BrokerAccountClient{bc},
-		mixAccountService:  &mix.MixAccountClient{bc},
-		mixMarketService:   &mix.MixMarketClient{bc},
-		mixOrderService:    &mix.MixOrderClient{bc},
-		mixPlanService:     &mix.MixPlanClient{bc},
-		mixPositionService: &mix.MixPositionClient{bc},
-		mixTraceService:    &mix.MixTraceClient{bc},
-		spotAccountService: &spot.SpotAccountClient{bc},
-		spotMarketService:  &spot.SpotMarketClient{bc},
-		spotOrderService:   &spot.SpotOrderClient{bc},
-		spotPublicService:  &spot.SpotPublicClient{bc},
+		brokerService:      &broker.BrokerAccountClient{BitgetRestClient: bc},
+		mixAccountService:  &mix.MixAccountClient{BitgetRestClient: bc},
+		mixMarketService:   &mix.MixMarketClient{BitgetRestClient: bc},
+		mixOrderService:    &mix.MixOrderClient{BitgetRestClient: bc},
+		mixPlanService:     &mix.MixPlanClient{BitgetRestClient: bc},
+		mixPositionService: &mix.MixPositionClient{BitgetRestClient: bc},
+		mixTraceService:    &mix.MixTraceClient{BitgetRestClient: bc},
+		spotAccountService: &spot.SpotAccountClient{BitgetRestClient: bc},
+		spotMarketService:  &spot.SpotMarketClient{BitgetRestClient: bc},
+		spotOrderService:   &spot.SpotOrderClient{BitgetRestClient: bc},
+		spotPublicService:  &spot.SpotPublicClient{BitgetRestClient: bc},
 	}
 }
 

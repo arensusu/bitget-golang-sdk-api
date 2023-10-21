@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/outtoin/bitget-golang-sdk-api/pkg/model/mix/account"
+	"github.com/arensusu/bitget-golang-sdk-api/pkg/model/mix/account"
 )
 
 func TestMixAccountClient_GetAccount(t *testing.T) {

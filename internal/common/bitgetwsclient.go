@@ -2,16 +2,17 @@ package common
 
 import (
 	"fmt"
-	"github.com/gorilla/websocket"
-	"github.com/robfig/cron"
 	"sync"
 	"time"
 
-	"github.com/outtoin/bitget-golang-sdk-api/config"
-	"github.com/outtoin/bitget-golang-sdk-api/constants"
-	"github.com/outtoin/bitget-golang-sdk-api/internal"
-	"github.com/outtoin/bitget-golang-sdk-api/internal/model"
-	"github.com/outtoin/bitget-golang-sdk-api/logging/applogger"
+	"github.com/gorilla/websocket"
+	"github.com/robfig/cron"
+
+	"github.com/arensusu/bitget-golang-sdk-api/config"
+	"github.com/arensusu/bitget-golang-sdk-api/constants"
+	"github.com/arensusu/bitget-golang-sdk-api/internal"
+	"github.com/arensusu/bitget-golang-sdk-api/internal/model"
+	"github.com/arensusu/bitget-golang-sdk-api/logging/applogger"
 )
 
 type BitgetBaseWsClient struct {

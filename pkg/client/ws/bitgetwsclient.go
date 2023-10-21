@@ -3,10 +3,10 @@ package ws
 import (
 	"strings"
 
-	"github.com/outtoin/bitget-golang-sdk-api/constants"
-	"github.com/outtoin/bitget-golang-sdk-api/internal/common"
-	"github.com/outtoin/bitget-golang-sdk-api/internal/model"
-	"github.com/outtoin/bitget-golang-sdk-api/logging/applogger"
+	"github.com/arensusu/bitget-golang-sdk-api/constants"
+	"github.com/arensusu/bitget-golang-sdk-api/internal/common"
+	"github.com/arensusu/bitget-golang-sdk-api/internal/model"
+	"github.com/arensusu/bitget-golang-sdk-api/logging/applogger"
 )
 
 type BitgetWsClient struct {

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/outtoin/bitget-golang-sdk-api/internal"
-	"github.com/outtoin/bitget-golang-sdk-api/pkg/model/mix/plan"
+	"github.com/arensusu/bitget-golang-sdk-api/internal"
+	"github.com/arensusu/bitget-golang-sdk-api/pkg/model/mix/plan"
 )
 
 func TestMixPlanClient_PlacePlan(t *testing.T) {

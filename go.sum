@@ -1,4 +1,3 @@
-
 github.com/benbjohnson/clock v1.1.0 h1:Q92kusRqC1XV2MjkWETPvjJVqKetz1OzxZB7mHJLju8=
 github.com/benbjohnson/clock v1.1.0/go.mod h1:J11/hYXuz8f4ySSvYwY0FKfm+ezbsZBKZxNJlLklBHA=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
@@ -11,8 +10,8 @@ github.com/gorilla/websocket v1.4.2/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/ad
 github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=
 github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
 github.com/kr/text v0.1.0/go.mod h1:4Jbv+DJW3UT/LiOwJeYQe1efqtUx/iVham/4vfdArNI=
-github.com/outtoin/bitget-golang-sdk-api v1.0.1 h1:xnZDAh3GSIARP4xm19xSRRs55KA1prKwasZDW7IOiBA=
-github.com/outtoin/bitget-golang-sdk-api v1.0.1/go.mod h1:hlN12m5bu68QLJW0Ojw5xHwDX6vw3ng58RmQMz7XnOA=
+github.com/arensusu/bitget-golang-sdk-api v1.0.14 h1:yUpVCOs5LTlOcc6aSPr/qcaQwJ90XG8vhcQphIywpyI=
+github.com/arensusu/bitget-golang-sdk-api v1.0.14/go.mod h1:hlN12m5bu68QLJW0Ojw5xHwDX6vw3ng58RmQMz7XnOA=
 github.com/pkg/errors v0.8.1 h1:iURUrRGxPUNPdy5/HRSm+Yj6okJ6UtLINN0Q9M4+h3I=
 github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=

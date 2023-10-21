@@ -8,8 +8,8 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/arensusu/bitget-golang-sdk-api/constants"
 	"github.com/goccy/go-json"
-	"github.com/outtoin/bitget-golang-sdk-api/constants"
 )
 
 func TimesStamp() string {
