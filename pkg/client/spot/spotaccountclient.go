@@ -1,6 +1,8 @@
 package spot
 
 import (
+	"encoding/json"
+
 	"github.com/arensusu/bitget-golang-sdk-api/constants"
 	"github.com/arensusu/bitget-golang-sdk-api/internal"
 	"github.com/arensusu/bitget-golang-sdk-api/internal/common"
@@ -16,19 +18,53 @@ func (p *SpotAccountClient) Init() *SpotAccountClient {
 	return p
 }
 
+type SpotGetAccountAssetsService struct {
+	Client *common.BitgetRestClient
+	coin   *string
+}
+
+type SpotGetAccountAssetsResponse struct {
+	common.CommonResponse
+	Data []SpotGetAccountAssetsData `json:"data"`
+}
+
+type SpotGetAccountAssetsData struct {
+	CoinId    int    `json:"coinId"`
+	CoinName  string `json:"coinName"`
+	Available string `json:"available"`
+	Frozen    string `json:"frozen"`
+	Lock      string `json:"lock"`
+	UTime     string `json:"uTime"`
+}
+
+func (p *SpotGetAccountAssetsService) Coin(coin string) *SpotGetAccountAssetsService {
+	p.coin = &coin
+	return p
+}
+
 /**
  * Obtain account assets
  * @return ResponseResult
  */
-func (p *SpotAccountClient) Assets() (string, error) {
+func (p *SpotGetAccountAssetsService) Do() (SpotGetAccountAssetsResponse, error) {
+	var res SpotGetAccountAssetsResponse
 
 	params := internal.NewParams()
+	if p.coin != nil {
+		params["coin"] = *p.coin
+	}
 
 	uri := constants.SpotAccount + "/assets"
+	resp, err := p.Client.DoGet(uri, params)
+	if err != nil {
+		return res, err
+	}
 
-	resp, err := p.BitgetRestClient.DoGet(uri, params)
+	if err = json.Unmarshal([]byte(resp), &res); err != nil {
+		return res, err
+	}
 
-	return resp, err
+	return res, err
 
 }
 
