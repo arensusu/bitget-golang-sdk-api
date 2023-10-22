@@ -6,6 +6,8 @@ import (
 	"github.com/arensusu/bitget-golang-sdk-api/constants"
 	"github.com/arensusu/bitget-golang-sdk-api/internal"
 	"github.com/arensusu/bitget-golang-sdk-api/internal/common"
+	common_domain "github.com/arensusu/bitget-golang-sdk-api/internal/common/domain"
+	"github.com/arensusu/bitget-golang-sdk-api/pkg/client/spot/domain"
 	"github.com/arensusu/bitget-golang-sdk-api/pkg/model/spot/account"
 )
 
@@ -19,22 +21,14 @@ func (p *SpotAccountClient) Init() *SpotAccountClient {
 }
 
 type SpotGetAccountAssetsService struct {
-	Client *common.BitgetRestClient
+	Client common_domain.RestClient
 	coin   *string
 }
 
-type SpotGetAccountAssetsResponse struct {
-	common.CommonResponse
-	Data []SpotGetAccountAssetsData `json:"data"`
-}
-
-type SpotGetAccountAssetsData struct {
-	CoinId    int    `json:"coinId"`
-	CoinName  string `json:"coinName"`
-	Available string `json:"available"`
-	Frozen    string `json:"frozen"`
-	Lock      string `json:"lock"`
-	UTime     string `json:"uTime"`
+func NewSpotGetAccountAssetsService(c common_domain.RestClient) *SpotGetAccountAssetsService {
+	return &SpotGetAccountAssetsService{
+		Client: c,
+	}
 }
 
 func (p *SpotGetAccountAssetsService) Coin(coin string) *SpotGetAccountAssetsService {
@@ -46,8 +40,8 @@ func (p *SpotGetAccountAssetsService) Coin(coin string) *SpotGetAccountAssetsSer
  * Obtain account assets
  * @return ResponseResult
  */
-func (p *SpotGetAccountAssetsService) Do() (SpotGetAccountAssetsResponse, error) {
-	var res SpotGetAccountAssetsResponse
+func (p *SpotGetAccountAssetsService) Do() (domain.SpotGetAccountAssetsResponse, error) {
+	var res domain.SpotGetAccountAssetsResponse
 
 	params := internal.NewParams()
 	if p.coin != nil {
