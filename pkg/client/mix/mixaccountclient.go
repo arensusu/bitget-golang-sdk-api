@@ -1,11 +1,68 @@
 package mix
 
 import (
+	"encoding/json"
+
 	"github.com/arensusu/bitget-golang-sdk-api/constants"
 	"github.com/arensusu/bitget-golang-sdk-api/internal"
 	"github.com/arensusu/bitget-golang-sdk-api/internal/common"
+	"github.com/arensusu/bitget-golang-sdk-api/internal/common/domain"
 	"github.com/arensusu/bitget-golang-sdk-api/pkg/model/mix/account"
 )
+
+type MixAccountGetAccountListService struct {
+	client domain.RestClient
+	params map[string]string
+}
+
+func NewMixAccountGetAccountListService(c domain.RestClient) *MixAccountGetAccountListService {
+	return &MixAccountGetAccountListService{
+		client: c,
+		params: internal.NewParams(),
+	}
+}
+
+func (s *MixAccountGetAccountListService) ProductType(productType string) *MixAccountGetAccountListService {
+	s.params["productType"] = productType
+	return s
+}
+
+type MixAccountGetAccountListReponse struct {
+	common.CommonResponse
+	Data []MixAccountGetAccountListData
+}
+
+type MixAccountGetAccountListData struct {
+	MarginCoin        string `json:"marginCoin"`
+	Locked            string `json:"locked"`
+	Available         string `json:"available"`
+	CrossMaxAvailable string `json:"crossMaxAvailable"`
+	FixedMaxAvailable string `json:"fixedMaxAvailable"`
+	MaxTransferOut    string `json:"maxTransferOut"`
+	Equity            string `json:"equity"`
+	UsdtEquity        string `json:"usdtEquity"`
+	BtcEquity         string `json:"btcEquity"`
+	CrossRiskRate     string `json:"crossRiskRate"`
+	UnrealizedPL      string `json:"unrealizedPL"`
+	Bonus             string `json:"bonus"`
+}
+
+func (s *MixAccountGetAccountListService) Do() (MixAccountGetAccountListReponse, error) {
+	var res MixAccountGetAccountListReponse
+
+	uri := constants.MixAccount + "/accounts"
+
+	resp, err := s.client.DoGet(uri, s.params)
+	if err != nil {
+		return res, err
+	}
+
+	if err = json.Unmarshal([]byte(resp), &res); err != nil {
+		return res, err
+	}
+
+	return res, nil
+}
 
 type MixAccountClient struct {
 	BitgetRestClient *common.BitgetRestClient
@@ -34,23 +91,6 @@ func (p *MixAccountClient) Account(symbol string, marginCoin string) (string, er
 
 	return resp, err
 
-}
-
-/**
- * Get account  information list
- * @param productType
- * @return ResponseResult
- */
-func (p *MixAccountClient) Accounts(productType string) (string, error) {
-
-	params := internal.NewParams()
-	params["productType"] = productType
-
-	uri := constants.MixAccount + "/accounts"
-
-	resp, err := p.BitgetRestClient.DoGet(uri, params)
-
-	return resp, err
 }
 
 /**

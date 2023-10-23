@@ -20,6 +20,7 @@ func TestSpotAccountAssetsService(t *testing.T) {
 	data := `{
 		"code":"00000",
 		"msg":"success",
+		"requestTime":1698067287632,
 		"data":[
 		  {
 			  "coinId":10012,
@@ -31,7 +32,7 @@ func TestSpotAccountAssetsService(t *testing.T) {
 		  }
 	  ]
 	  }`
-	uri := constants.SpotAccount + "/assets"
+	uri := constants.SpotAccount + "/assets-lite"
 	params := internal.NewParams()
 	mockClient.EXPECT().DoGet(uri, params).Return(data, nil)
 
@@ -39,8 +40,9 @@ func TestSpotAccountAssetsService(t *testing.T) {
 	response, err := service.Do()
 	expect := SpotAccountGetAccountAssetsLiteResponse{
 		CommonResponse: common.CommonResponse{
-			Code: "00000",
-			Msg:  "success",
+			Code:        "00000",
+			Msg:         "success",
+			RequestTime: 1698067287632,
 		},
 		Data: []SpotAccountGetAccountAssetsLiteData{
 			{
@@ -66,6 +68,7 @@ func TestSpotAccountClient_Bills(t *testing.T) {
 	data := `{
 		"code":"00000",
 		"msg":"success",
+		"requestTime": 1698067287632,
 		"data":[{
 			"cTime":"1622697148",
 			"coinId":22,
@@ -83,8 +86,9 @@ func TestSpotAccountClient_Bills(t *testing.T) {
 
 	expect := SpotAccountGetBillsServiceResponse{
 		CommonResponse: common.CommonResponse{
-			Code: "00000",
-			Msg:  "success",
+			Code:        "00000",
+			Msg:         "success",
+			RequestTime: 1698067287632,
 		},
 		Data: []SpotAccountGetBillsServiceData{
 			{
