@@ -61,6 +61,10 @@ func (c *Client) GetBrokerService() *broker.BrokerAccountClient {
 }
 
 // mix
+func (c *Client) NewMixAccountGetAccountListService() *mix.MixAccountGetAccountListService {
+	return mix.NewMixAccountGetAccountListService(c.client)
+}
+
 func (c *Client) GetMixAccountService() *mix.MixAccountClient {
 	return c.mixAccountService
 }
