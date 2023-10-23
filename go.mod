@@ -1,6 +1,6 @@
 module github.com/arensusu/bitget-golang-sdk-api
 
-go 1.21.1
+go 1.20
 
 require (
 	github.com/goccy/go-json v0.9.7
