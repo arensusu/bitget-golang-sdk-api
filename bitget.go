@@ -25,10 +25,9 @@ type Client struct {
 	mixPositionService *mix.MixPositionClient
 	mixTraceService    *mix.MixTraceClient
 
-	spotAccountService *spot.SpotAccountClient
-	spotMarketService  *spot.SpotMarketClient
-	spotOrderService   *spot.SpotOrderClient
-	spotPublicService  *spot.SpotPublicClient
+	spotMarketService *spot.SpotMarketClient
+	spotOrderService  *spot.SpotOrderClient
+	spotPublicService *spot.SpotPublicClient
 	//spotWalletService	*spot.SpotWalletClient			// @todo
 }
 
@@ -45,7 +44,6 @@ func NewClient() *Client {
 		mixPlanService:     &mix.MixPlanClient{BitgetRestClient: bc},
 		mixPositionService: &mix.MixPositionClient{BitgetRestClient: bc},
 		mixTraceService:    &mix.MixTraceClient{BitgetRestClient: bc},
-		spotAccountService: &spot.SpotAccountClient{BitgetRestClient: bc},
 		spotMarketService:  &spot.SpotMarketClient{BitgetRestClient: bc},
 		spotOrderService:   &spot.SpotOrderClient{BitgetRestClient: bc},
 		spotPublicService:  &spot.SpotPublicClient{BitgetRestClient: bc},
@@ -83,10 +81,10 @@ func (c *Client) GetMixTraceService() *mix.MixTraceClient {
 }
 
 // spot
-
-func (c *Client) GetSpotAccountService() *spot.SpotAccountClient {
-	return c.spotAccountService
+func (c *Client) NewSpotAccountGetAccountAssetsLiteService() *spot.SpotAccountGetAccountAssetsLiteService {
+	return spot.NewSpotAccountGetAccountAssetsLiteService(c.client)
 }
+
 func (c *Client) GetSpotMarketService() *spot.SpotMarketClient {
 	return c.spotMarketService
 }

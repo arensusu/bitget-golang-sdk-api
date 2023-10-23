@@ -68,7 +68,7 @@ func TestSpotAccountClient_Bills(t *testing.T) {
 		"msg":"success",
 		"data":[{
 			"cTime":"1622697148",
-			"coinId":"22",
+			"coinId":22,
 			"coinName":"usdt",
 			"groupType":"deposit",
 			"bizType":"transfer-in", 
@@ -89,7 +89,7 @@ func TestSpotAccountClient_Bills(t *testing.T) {
 		Data: []SpotAccountGetBillsServiceData{
 			{
 				CTime:     "1622697148",
-				CoinId:    "22",
+				CoinId:    22,
 				CoinName:  "usdt",
 				GroupType: "deposit",
 				BizType:   "transfer-in",
@@ -105,8 +105,4 @@ func TestSpotAccountClient_Bills(t *testing.T) {
 
 	assert.NoError(t, err)
 	assert.Equal(t, expect, res)
-}
-
-func TestSpotAccountClient_TransferRecords(t *testing.T) {
-
 }

@@ -63,105 +63,6 @@ func (s *SpotAccountGetAccountAssetsLiteService) Do() (SpotAccountGetAccountAsse
 
 }
 
-type SpotAccountGetTransferRecordsService struct {
-	Client   domain.RestClient
-	coinId   *string
-	fromType *string
-	limit    *string
-	after    *string
-	before   *string
-}
-
-func NewSpotAccountGetTransferRecordsService(c domain.RestClient) *SpotAccountGetTransferRecordsService {
-	return &SpotAccountGetTransferRecordsService{Client: c}
-}
-
-func (s *SpotAccountGetTransferRecordsService) CoinId(id string) *SpotAccountGetTransferRecordsService {
-	s.coinId = &id
-	return s
-}
-
-func (s *SpotAccountGetTransferRecordsService) FromType(fromType string) *SpotAccountGetTransferRecordsService {
-	s.fromType = &fromType
-	return s
-}
-
-func (s *SpotAccountGetTransferRecordsService) Limit(limit string) *SpotAccountGetTransferRecordsService {
-	s.limit = &limit
-	return s
-}
-
-func (s *SpotAccountGetTransferRecordsService) After(after string) *SpotAccountGetTransferRecordsService {
-	s.after = &after
-	return s
-}
-
-func (s *SpotAccountGetTransferRecordsService) Before(before string) *SpotAccountGetTransferRecordsService {
-	s.before = &before
-	return s
-}
-
-type SpotAccountGetTransferRecordsServiceResponse struct {
-	common.CommonResponse
-	Data []SpotAccountGetTransferRecordsServiceData `json:"data"`
-}
-
-type SpotAccountGetTransferRecordsServiceData struct {
-	CoinName   string `json:"coinName"`
-	Status     string `json:"status"`
-	ToType     string `json:"toType"`
-	ToSymbol   string `json:"toSymbol"`
-	FromType   string `json:"fromType"`
-	FromSymbol string `json:"fromSymbol"`
-	Amount     string `json:"amount"`
-	TradeTime  string `json:"tradeTime"`
-	ClientOid  string `json:"clientOid"`
-	TransferId string `json:"transferId"`
-}
-
-/**
- * Obtain transfer records
- * @param coinId
- * @param fromType
- * @param limit
- * @param after
- * @param before
- * @return ResponseResult
- */
-func (s *SpotAccountGetTransferRecordsService) Do() (SpotAccountGetTransferRecordsServiceResponse, error) {
-	var res SpotAccountGetTransferRecordsServiceResponse
-
-	params := internal.NewParams()
-	if s.coinId != nil {
-		params["coinId"] = *s.coinId
-	}
-	if s.fromType != nil {
-		params["fromType"] = *s.fromType
-	}
-	if s.limit != nil {
-		params["limit"] = *s.limit
-	}
-	if s.after != nil {
-		params["after"] = *s.after
-	}
-	if s.before != nil {
-		params["before"] = *s.before
-	}
-
-	uri := constants.SpotAccount + "/transferRecords"
-
-	resp, err := s.Client.DoGet(uri, params)
-	if err != nil {
-		return res, err
-	}
-
-	if err = json.Unmarshal([]byte(resp), &res); err != nil {
-		return res, err
-	}
-
-	return res, nil
-}
-
 type SpotAccountGetBillsParam struct {
 	CoinId    string `json:"coinId"`
 	GroupType string `json:"groupType"`
@@ -216,15 +117,15 @@ type SpotAccountGetBillsServiceResponse struct {
 }
 
 type SpotAccountGetBillsServiceData struct {
-	CTime     string `json:"cTime"`
-	CoinId    string `json:"coinId"`
+	BillId    string `json:"billId"`
+	CoinId    int    `json:"coinId"`
 	CoinName  string `json:"coinName"`
 	GroupType string `json:"groupType"`
 	BizType   string `json:"bizType"`
 	Quantity  string `json:"quantity"`
 	Balance   string `json:"balance"`
 	Fees      string `json:"fees"`
-	BillId    string `json:"billId"`
+	CTime     string `json:"cTime"`
 }
 
 /**
