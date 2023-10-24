@@ -22,9 +22,10 @@ type BitgetRestClient struct {
 }
 
 type CommonResponse struct {
-	Code        string `json:"code"`
-	Msg         string `json:"msg"`
-	RequestTime int64  `json:"requestTime"`
+	Code string `json:"code"`
+	Msg  string `json:"msg"`
+	// requestTime may be int64 or string
+	// RequestTime any    `json:"requestTime"`
 }
 
 func (p *BitgetRestClient) Init() *BitgetRestClient {

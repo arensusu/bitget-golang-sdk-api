@@ -44,9 +44,9 @@ func TestMixAccountGetAccountList(t *testing.T) {
 
 	expect := MixAccountGetAccountListReponse{
 		CommonResponse: common.CommonResponse{
-			Code:        "00000",
-			Msg:         "success",
-			RequestTime: 1698067287632,
+			Code: "00000",
+			Msg:  "success",
+			//RequestTime: 1698067287632,
 		},
 		Data: []MixAccountGetAccountListData{
 			{

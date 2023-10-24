@@ -1,9 +1,12 @@
 package mix
 
 import (
+	"encoding/json"
+
 	"github.com/arensusu/bitget-golang-sdk-api/constants"
 	"github.com/arensusu/bitget-golang-sdk-api/internal"
 	"github.com/arensusu/bitget-golang-sdk-api/internal/common"
+	"github.com/arensusu/bitget-golang-sdk-api/internal/common/domain"
 )
 
 type MixMarketClient struct {
@@ -52,21 +55,64 @@ func (p *MixMarketClient) Depth(symbol string, limit string) (string, error) {
 	return resp, err
 }
 
+type MixMarketGetAllTickersService struct {
+	client domain.RestClient
+}
+
+func NewMixMarketGetAllTickersService(c domain.RestClient) *MixMarketGetAllTickersService {
+	return &MixMarketGetAllTickersService{client: c}
+}
+
+type MixMarketGetAllTickersResponse struct {
+	common.CommonResponse
+	Data []MixMarketGetAllTickersData
+}
+
+type MixMarketGetAllTickersData struct {
+	Symbol             string `json:"symbol"`
+	Last               string `json:"last"`
+	BestAsk            string `json:"bestAsk"`
+	BestBid            string `json:"bestBid"`
+	BidSz              string `json:"bidSz"`
+	AskSz              string `json:"askSz"`
+	High24h            string `json:"high24h"`
+	Low24h             string `json:"low24h"`
+	Timestamp          string `json:"timestamp"`
+	PriceChangePercent string `json:"priceChangePercent"`
+	BaseVolume         string `json:"baseVolume"`
+	QuoteVolume        string `json:"quoteVolume"`
+	UsdtVolume         string `json:"usdtVolume"`
+	OpenUtc            string `json:"openUtc"`
+	ChgUtc             string `json:"chgUtc"`
+	IndexPrice         string `json:"indexPrice"`
+	FundingRate        string `json:"fundingRate"`
+	HoldingAmount      string `json:"holdingAmount"`
+	DeliveryStatus     string `json:"deliveryStatus"`
+}
+
 /**
  * Acquisition of single ticker market
  * @param productType
  * @return ResponseResult
  */
-func (p *MixMarketClient) Tickers(productType string) (string, error) {
+func (s *MixMarketGetAllTickersService) Do(productType string) (MixMarketGetAllTickersResponse, error) {
+	var res MixMarketGetAllTickersResponse
 
 	params := internal.NewParams()
 	params["productType"] = productType
 
 	uri := constants.MixMarket + "/tickers"
 
-	resp, err := p.BitgetRestClient.DoGet(uri, params)
+	resp, err := s.client.DoGet(uri, params)
+	if err != nil {
+		return res, err
+	}
 
-	return resp, err
+	if err = json.Unmarshal([]byte(resp), &res); err != nil {
+		return res, err
+	}
+
+	return res, nil
 }
 
 /**
@@ -144,21 +190,46 @@ func (p *MixMarketClient) Index(symbol string) (string, error) {
 	return resp, err
 }
 
+type MixMarketGetNextFundingTimeService struct {
+	client domain.RestClient
+}
+
+func NewMixMarketGetNextFundingTimeService(c domain.RestClient) *MixMarketGetNextFundingTimeService {
+	return &MixMarketGetNextFundingTimeService{client: c}
+}
+
+type MixMarketGetNextFundingTimeResponse struct {
+	common.CommonResponse
+	Data MixMarketGetNextFundingTimeData
+}
+
+type MixMarketGetNextFundingTimeData struct {
+	Symbol      string `json:"symbol"`
+	FundingTime string `json:"fundingTime"`
+	RatePeriod  string `json:"ratePeriod"`
+}
+
 /**
  * Get the next settlement time of the contract
  * @param symbol
  * @return ResponseResult
  */
-func (p *MixMarketClient) FundingTime(symbol string) (string, error) {
+func (s *MixMarketGetNextFundingTimeService) Do(symbol string) (MixMarketGetNextFundingTimeResponse, error) {
+	var res MixMarketGetNextFundingTimeResponse
 
 	params := internal.NewParams()
 	params["symbol"] = symbol
 
 	uri := constants.MixMarket + "/funding-time"
 
-	resp, err := p.BitgetRestClient.DoGet(uri, params)
+	resp, err := s.client.DoGet(uri, params)
+	if err != nil {
+		return res, err
+	}
 
-	return resp, err
+	err = json.Unmarshal([]byte(resp), &res)
+
+	return res, err
 }
 
 /**

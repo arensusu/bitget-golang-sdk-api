@@ -65,6 +65,14 @@ func (c *Client) NewMixAccountGetAccountListService() *mix.MixAccountGetAccountL
 	return mix.NewMixAccountGetAccountListService(c.client)
 }
 
+func (c *Client) NewMixMarketGetAllTickersService() *mix.MixMarketGetAllTickersService {
+	return mix.NewMixMarketGetAllTickersService(c.client)
+}
+
+func (c *Client) NewMixMarketGetNextFundingTimeService() *mix.MixMarketGetNextFundingTimeService {
+	return mix.NewMixMarketGetNextFundingTimeService(c.client)
+}
+
 func (c *Client) GetMixAccountService() *mix.MixAccountClient {
 	return c.mixAccountService
 }

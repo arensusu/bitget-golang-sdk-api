@@ -40,9 +40,9 @@ func TestSpotAccountAssetsService(t *testing.T) {
 	response, err := service.Do()
 	expect := SpotAccountGetAccountAssetsLiteResponse{
 		CommonResponse: common.CommonResponse{
-			Code:        "00000",
-			Msg:         "success",
-			RequestTime: 1698067287632,
+			Code: "00000",
+			Msg:  "success",
+			//RequestTime: 1698067287632,
 		},
 		Data: []SpotAccountGetAccountAssetsLiteData{
 			{
@@ -86,9 +86,9 @@ func TestSpotAccountClient_Bills(t *testing.T) {
 
 	expect := SpotAccountGetBillsServiceResponse{
 		CommonResponse: common.CommonResponse{
-			Code:        "00000",
-			Msg:         "success",
-			RequestTime: 1698067287632,
+			Code: "00000",
+			Msg:  "success",
+			//RequestTime: 1698067287632,
 		},
 		Data: []SpotAccountGetBillsServiceData{
 			{
