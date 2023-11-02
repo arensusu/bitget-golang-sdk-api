@@ -10,12 +10,11 @@ import (
 )
 
 type MixMarketClient struct {
-	BitgetRestClient *common.BitgetRestClient
+	BitgetRestClient domain.RestClient
 }
 
-func (p *MixMarketClient) Init() *MixMarketClient {
-	p.BitgetRestClient = new(common.BitgetRestClient).Init()
-	return p
+func NewMixMarketClient(c domain.RestClient) *MixMarketClient {
+	return &MixMarketClient{BitgetRestClient: c}
 }
 
 /**
@@ -55,20 +54,12 @@ func (p *MixMarketClient) Depth(symbol string, limit string) (string, error) {
 	return resp, err
 }
 
-type MixMarketGetAllTickersService struct {
-	client domain.RestClient
-}
-
-func NewMixMarketGetAllTickersService(c domain.RestClient) *MixMarketGetAllTickersService {
-	return &MixMarketGetAllTickersService{client: c}
-}
-
-type MixMarketGetAllTickersResponse struct {
+type GetTickersResponse struct {
 	common.CommonResponse
-	Data []MixMarketGetAllTickersData
+	Data []GetTickerData
 }
 
-type MixMarketGetAllTickersData struct {
+type GetTickerData struct {
 	Symbol             string `json:"symbol"`
 	Last               string `json:"last"`
 	BestAsk            string `json:"bestAsk"`
@@ -95,15 +86,15 @@ type MixMarketGetAllTickersData struct {
  * @param productType
  * @return ResponseResult
  */
-func (s *MixMarketGetAllTickersService) Do(productType string) (MixMarketGetAllTickersResponse, error) {
-	var res MixMarketGetAllTickersResponse
+func (s *MixMarketClient) GetTickers(productType string) (GetTickersResponse, error) {
+	var res GetTickersResponse
 
 	params := internal.NewParams()
 	params["productType"] = productType
 
 	uri := constants.MixMarket + "/tickers"
 
-	resp, err := s.client.DoGet(uri, params)
+	resp, err := s.BitgetRestClient.DoGet(uri, params)
 	if err != nil {
 		return res, err
 	}
@@ -115,21 +106,34 @@ func (s *MixMarketGetAllTickersService) Do(productType string) (MixMarketGetAllT
 	return res, nil
 }
 
+type GetTickerResponse struct {
+	common.CommonResponse
+	Data GetTickerData
+}
+
 /**
  * Deep market
  * @param symbol
  * @return ResponseResult
  */
-func (p *MixMarketClient) Ticker(symbol string) (string, error) {
+func (s *MixMarketClient) GetTicker(symbol string) (GetTickerResponse, error) {
+	var res GetTickerResponse
 
 	params := internal.NewParams()
 	params["symbol"] = symbol
 
 	uri := constants.MixMarket + "/ticker"
 
-	resp, err := p.BitgetRestClient.DoGet(uri, params)
+	resp, err := s.BitgetRestClient.DoGet(uri, params)
+	if err != nil {
+		return res, err
+	}
 
-	return resp, err
+	if err = json.Unmarshal([]byte(resp), &res); err != nil {
+		return res, err
+	}
+
+	return res, nil
 }
 
 /**
@@ -190,20 +194,12 @@ func (p *MixMarketClient) Index(symbol string) (string, error) {
 	return resp, err
 }
 
-type MixMarketGetNextFundingTimeService struct {
-	client domain.RestClient
-}
-
-func NewMixMarketGetNextFundingTimeService(c domain.RestClient) *MixMarketGetNextFundingTimeService {
-	return &MixMarketGetNextFundingTimeService{client: c}
-}
-
-type MixMarketGetNextFundingTimeResponse struct {
+type GetNextFundingTimeResponse struct {
 	common.CommonResponse
-	Data MixMarketGetNextFundingTimeData
+	Data GetNextFundingTimeData
 }
 
-type MixMarketGetNextFundingTimeData struct {
+type GetNextFundingTimeData struct {
 	Symbol      string `json:"symbol"`
 	FundingTime string `json:"fundingTime"`
 	RatePeriod  string `json:"ratePeriod"`
@@ -214,15 +210,15 @@ type MixMarketGetNextFundingTimeData struct {
  * @param symbol
  * @return ResponseResult
  */
-func (s *MixMarketGetNextFundingTimeService) Do(symbol string) (MixMarketGetNextFundingTimeResponse, error) {
-	var res MixMarketGetNextFundingTimeResponse
+func (s *MixMarketClient) GetNextFundingTime(symbol string) (GetNextFundingTimeResponse, error) {
+	var res GetNextFundingTimeResponse
 
 	params := internal.NewParams()
 	params["symbol"] = symbol
 
 	uri := constants.MixMarket + "/funding-time"
 
-	resp, err := s.client.DoGet(uri, params)
+	resp, err := s.BitgetRestClient.DoGet(uri, params)
 	if err != nil {
 		return res, err
 	}
