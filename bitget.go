@@ -1,8 +1,6 @@
 package bitget
 
 import (
-	"net/http"
-
 	"github.com/arensusu/bitget-golang-sdk-api/internal/common"
 	"github.com/arensusu/bitget-golang-sdk-api/pkg/client/mix"
 	"github.com/arensusu/bitget-golang-sdk-api/pkg/client/spot"
@@ -21,14 +19,9 @@ func NewClient() *Client {
 	}
 }
 
-func (c *Client) SetHttpClient(client *http.Client) *Client {
-	c.client.HttpClient = client
-	return c
-}
-
 // mix
-func (c *Client) NewMixAccountGetAccountListService() *mix.MixAccountGetAccountListService {
-	return mix.NewMixAccountGetAccountListService(c.client)
+func (c *Client) MixAccount() *mix.MixAccountService {
+	return mix.NewMixAccountService(c.client)
 }
 
 func (c *Client) MixMarket() *mix.MixMarketService {
@@ -36,6 +29,6 @@ func (c *Client) MixMarket() *mix.MixMarketService {
 }
 
 // spot
-func (c *Client) NewSpotAccountGetAccountAssetsLiteService() *spot.SpotAccountGetAccountAssetsLiteService {
-	return spot.NewSpotAccountGetAccountAssetsLiteService(c.client)
+func (c *Client) SpotAccount() *spot.SpotAccountService {
+	return spot.NewSpotAccountService(c.client)
 }

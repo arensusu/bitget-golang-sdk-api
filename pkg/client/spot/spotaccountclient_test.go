@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestSpotAccountAssetsService(t *testing.T) {
+func TestSpotAccountGetAssetsLiteService(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -36,15 +36,16 @@ func TestSpotAccountAssetsService(t *testing.T) {
 	params := internal.NewParams()
 	mockClient.EXPECT().DoGet(uri, params).Return(data, nil)
 
-	service := NewSpotAccountGetAccountAssetsLiteService(mockClient)
-	response, err := service.Do()
-	expect := SpotAccountGetAccountAssetsLiteResponse{
+	param := GetAssetsLiteParam{}
+	service := NewSpotAccountService(mockClient)
+	response, err := service.GetAssetsLite(param)
+	expect := GetAssetsLiteResponse{
 		CommonResponse: common.CommonResponse{
 			Code: "00000",
 			Msg:  "success",
 			//RequestTime: 1698067287632,
 		},
-		Data: []SpotAccountGetAccountAssetsLiteData{
+		Data: []GetAssetsLiteData{
 			{
 				CoinId:    10012,
 				CoinName:  "usdt",
@@ -58,55 +59,4 @@ func TestSpotAccountAssetsService(t *testing.T) {
 
 	assert.NoError(t, err)
 	assert.Equal(t, expect, response)
-}
-
-func TestSpotAccountClient_Bills(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	uri := constants.SpotAccount + "/bills"
-	data := `{
-		"code":"00000",
-		"msg":"success",
-		"requestTime": 1698067287632,
-		"data":[{
-			"cTime":"1622697148",
-			"coinId":22,
-			"coinName":"usdt",
-			"groupType":"deposit",
-			"bizType":"transfer-in", 
-			"quantity":"1",
-			"balance": "1",
-			"fees":"0",
-			"billId":"1291"
-	  }]
-	}`
-	mockClient := mocks.NewMockRestClient(ctrl)
-	mockClient.EXPECT().DoPost(uri, `{"coinId":"","groupType":"","bizType":"","after":"","before":"","limit":""}`).Return(data, nil)
-
-	expect := SpotAccountGetBillsServiceResponse{
-		CommonResponse: common.CommonResponse{
-			Code: "00000",
-			Msg:  "success",
-			//RequestTime: 1698067287632,
-		},
-		Data: []SpotAccountGetBillsServiceData{
-			{
-				CTime:     "1622697148",
-				CoinId:    22,
-				CoinName:  "usdt",
-				GroupType: "deposit",
-				BizType:   "transfer-in",
-				Quantity:  "1",
-				Balance:   "1",
-				Fees:      "0",
-				BillId:    "1291",
-			},
-		},
-	}
-	service := NewSpotAccountGetBillsService(mockClient)
-	res, err := service.Do()
-
-	assert.NoError(t, err)
-	assert.Equal(t, expect, res)
 }

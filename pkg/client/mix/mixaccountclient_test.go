@@ -42,13 +42,13 @@ func TestMixAccountGetAccountList(t *testing.T) {
 	mockClient := mocks.NewMockRestClient(ctrl)
 	mockClient.EXPECT().DoGet(uri, params).Return(data, nil)
 
-	expect := MixAccountGetAccountListReponse{
+	expect := GetAccountsReponse{
 		CommonResponse: common.CommonResponse{
 			Code: "00000",
 			Msg:  "success",
 			//RequestTime: 1698067287632,
 		},
-		Data: []MixAccountGetAccountListData{
+		Data: []GetAccountsData{
 			{
 				MarginCoin:        "USDT",
 				Locked:            "0",
@@ -66,15 +66,15 @@ func TestMixAccountGetAccountList(t *testing.T) {
 		},
 	}
 
-	service := NewMixAccountGetAccountListService(mockClient)
-	res, err := service.ProductType("umcbl").Do()
+	service := NewMixAccountService(mockClient)
+	res, err := service.GetAccounts("umcbl")
 
 	assert.NoError(t, err)
 	assert.Equal(t, expect, res)
 }
 
-func TestMixAccountClient_GetAccount(t *testing.T) {
-	client := new(MixAccountClient).Init()
+func TestMixAccountService_GetAccount(t *testing.T) {
+	client := new(MixAccountService)
 	resp, err := client.Account("BTCUSDT_UMCBL", "USDT")
 	if err != nil {
 		println(err.Error())
@@ -82,8 +82,8 @@ func TestMixAccountClient_GetAccount(t *testing.T) {
 	fmt.Println(resp)
 }
 
-func TestMixAccountClient_SetLeverage(t *testing.T) {
-	client := new(MixAccountClient).Init()
+func TestMixAccountService_SetLeverage(t *testing.T) {
+	client := new(MixAccountService)
 	req := account.SetLeveragerReq{Symbol: "BTCUSDT_UMCBL", MarginCoin: "USDT", Leverage: "10"}
 
 	resp, err := client.SetLeverage(req)
@@ -94,8 +94,8 @@ func TestMixAccountClient_SetLeverage(t *testing.T) {
 	fmt.Println(resp)
 }
 
-func TestMixAccountClient_SetMargin(t *testing.T) {
-	client := new(MixAccountClient).Init()
+func TestMixAccountService_SetMargin(t *testing.T) {
+	client := new(MixAccountService)
 	req := account.SetMarginReq{Symbol: "BTCUSDT_UMCBL", MarginCoin: "USDT", HoldSide: "long", Amount: "10"}
 
 	resp, err := client.SetMargin(req)
@@ -105,8 +105,8 @@ func TestMixAccountClient_SetMargin(t *testing.T) {
 	}
 	fmt.Println(resp)
 }
-func TestMixAccountClient_SetMarginMode(t *testing.T) {
-	client := new(MixAccountClient).Init()
+func TestMixAccountService_SetMarginMode(t *testing.T) {
+	client := new(MixAccountService)
 	req := account.SetMarginModeReq{Symbol: "BTCUSDT_UMCBL", MarginCoin: "USDT", MarginMode: "fixed"}
 
 	resp, err := client.SetMarginMode(req)
@@ -117,8 +117,8 @@ func TestMixAccountClient_SetMarginMode(t *testing.T) {
 	fmt.Println(resp)
 }
 
-func TestMixAccountClient_OpenCount(t *testing.T) {
-	client := new(MixAccountClient).Init()
+func TestMixAccountService_OpenCount(t *testing.T) {
+	client := new(MixAccountService)
 	req := account.OpenCountReq{Symbol: "BTCUSDT_UMCBL", MarginCoin: "USDT", OpenPrice: "3000", OpenAmount: "99999", Leverage: "20"}
 
 	resp, err := client.OpenCount(req)

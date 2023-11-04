@@ -10,29 +10,20 @@ import (
 	"github.com/arensusu/bitget-golang-sdk-api/pkg/model/mix/account"
 )
 
-type MixAccountGetAccountListService struct {
-	client domain.RestClient
-	params map[string]string
+type MixAccountService struct {
+	BitgetRestClient domain.RestClient
 }
 
-func NewMixAccountGetAccountListService(c domain.RestClient) *MixAccountGetAccountListService {
-	return &MixAccountGetAccountListService{
-		client: c,
-		params: internal.NewParams(),
-	}
+func NewMixAccountService(c domain.RestClient) *MixAccountService {
+	return &MixAccountService{BitgetRestClient: c}
 }
 
-func (s *MixAccountGetAccountListService) ProductType(productType string) *MixAccountGetAccountListService {
-	s.params["productType"] = productType
-	return s
-}
-
-type MixAccountGetAccountListReponse struct {
+type GetAccountsReponse struct {
 	common.CommonResponse
-	Data []MixAccountGetAccountListData
+	Data []GetAccountsData
 }
 
-type MixAccountGetAccountListData struct {
+type GetAccountsData struct {
 	MarginCoin        string `json:"marginCoin"`
 	Locked            string `json:"locked"`
 	Available         string `json:"available"`
@@ -47,12 +38,14 @@ type MixAccountGetAccountListData struct {
 	Bonus             string `json:"bonus"`
 }
 
-func (s *MixAccountGetAccountListService) Do() (MixAccountGetAccountListReponse, error) {
-	var res MixAccountGetAccountListReponse
+func (s *MixAccountService) GetAccounts(productType string) (GetAccountsReponse, error) {
+	var res GetAccountsReponse
 
 	uri := constants.MixAccount + "/accounts"
+	params := internal.NewParams()
+	params["productType"] = productType
 
-	resp, err := s.client.DoGet(uri, s.params)
+	resp, err := s.BitgetRestClient.DoGet(uri, params)
 	if err != nil {
 		return res, err
 	}
@@ -64,22 +57,13 @@ func (s *MixAccountGetAccountListService) Do() (MixAccountGetAccountListReponse,
 	return res, nil
 }
 
-type MixAccountClient struct {
-	BitgetRestClient *common.BitgetRestClient
-}
-
-func (p *MixAccountClient) Init() *MixAccountClient {
-	p.BitgetRestClient = new(common.BitgetRestClient).Init()
-	return p
-}
-
 /**
  * Get account  information
  * @param symbol
  * @param marginCoin
  * @return ResponseResult
  */
-func (p *MixAccountClient) Account(symbol string, marginCoin string) (string, error) {
+func (p *MixAccountService) Account(symbol string, marginCoin string) (string, error) {
 
 	params := internal.NewParams()
 	params["symbol"] = symbol
@@ -98,7 +82,7 @@ func (p *MixAccountClient) Account(symbol string, marginCoin string) (string, er
  * @param SetLeveragerReq
  * @return ResponseResult
  */
-func (p *MixAccountClient) SetLeverage(params account.SetLeveragerReq) (string, error) {
+func (p *MixAccountService) SetLeverage(params account.SetLeveragerReq) (string, error) {
 	postBody, jsonErr := internal.ToJson(params)
 
 	if jsonErr != nil {
@@ -117,7 +101,7 @@ func (p *MixAccountClient) SetLeverage(params account.SetLeveragerReq) (string, 
  * @param SetMarginReq
  * @return ResponseResult
  */
-func (p *MixAccountClient) SetMargin(params account.SetMarginReq) (string, error) {
+func (p *MixAccountService) SetMargin(params account.SetMarginReq) (string, error) {
 
 	postBody, jsonErr := internal.ToJson(params)
 
@@ -137,7 +121,7 @@ func (p *MixAccountClient) SetMargin(params account.SetMarginReq) (string, error
  * @param SetMarginModeReq
  * @return ResponseResult
  */
-func (p *MixAccountClient) SetMarginMode(params account.SetMarginModeReq) (string, error) {
+func (p *MixAccountService) SetMarginMode(params account.SetMarginModeReq) (string, error) {
 
 	postBody, jsonErr := internal.ToJson(params)
 
@@ -157,7 +141,7 @@ func (p *MixAccountClient) SetMarginMode(params account.SetMarginModeReq) (strin
  * @param OpenCountReq
  * @return ResponseResult
  */
-func (p *MixAccountClient) OpenCount(params account.OpenCountReq) (string, error) {
+func (p *MixAccountService) OpenCount(params account.OpenCountReq) (string, error) {
 
 	postBody, jsonErr := internal.ToJson(params)
 
@@ -172,7 +156,7 @@ func (p *MixAccountClient) OpenCount(params account.OpenCountReq) (string, error
 	return resp, err
 }
 
-func (p *MixAccountClient) SetPositionMode(params account.SetPositionModeReq) (string, error) {
+func (p *MixAccountService) SetPositionMode(params account.SetPositionModeReq) (string, error) {
 
 	postBody, jsonErr := internal.ToJson(params)
 
