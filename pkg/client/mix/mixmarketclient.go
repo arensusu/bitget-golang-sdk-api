@@ -9,39 +9,77 @@ import (
 	"github.com/arensusu/bitget-golang-sdk-api/internal/common/domain"
 )
 
-type MixMarketClient struct {
+type MixMarketService struct {
 	BitgetRestClient domain.RestClient
 }
 
-func NewMixMarketClient(c domain.RestClient) *MixMarketClient {
-	return &MixMarketClient{BitgetRestClient: c}
+func NewMixMarketService(c domain.RestClient) *MixMarketService {
+	return &MixMarketService{BitgetRestClient: c}
 }
 
-/**
- * Contract information
- * @param productType
- * @return ResponseResult
- */
-func (p *MixMarketClient) Contracts(productType string) (string, error) {
+type GetSymbolsResponse struct {
+	common.CommonResponse
+	Data []GetSymbolsData
+}
+
+type GetSymbolsData struct {
+	BaseCoin            string   `json:"baseCoin"`
+	BuyLimitPriceRatio  string   `json:"buyLimitPriceRatio"`
+	FeeRateUpRatio      string   `json:"feeRateUpRatio"`
+	LimitOpenTime       string   `json:"limitOpenTime"`
+	MaintainTime        string   `json:"maintainTime"`
+	MakerFeeRate        string   `json:"makerFeeRate"`
+	MaxOrderNum         string   `json:"maxOrderNum"`
+	MaxPositionNum      string   `json:"maxPositionNum"`
+	MinTradeNum         string   `json:"minTradeNum"`
+	MinTradeUSDT        string   `json:"minTradeUSDT"`
+	OffTime             string   `json:"offTime"`
+	OpenCostUpRatio     string   `json:"openCostUpRatio"`
+	PriceEndStep        string   `json:"priceEndStep"`
+	PricePlace          string   `json:"pricePlace"`
+	QuoteCoin           string   `json:"quoteCoin"`
+	SellLimitPriceRatio string   `json:"sellLimitPriceRatio"`
+	SizeMultiplier      string   `json:"sizeMultiplier"`
+	SupportMarginCoins  []string `json:"supportMarginCoins"`
+	Symbol              string   `json:"symbol"`
+	SymbolName          string   `json:"symbolName"`
+	SymbolStatus        string   `json:"symbolStatus"`
+	SymbolType          string   `json:"symbolType"`
+	TakerFeeRate        string   `json:"takerFeeRate"`
+	VolumePlace         string   `json:"volumePlace"`
+}
+
+func (s *MixMarketService) GetSymbols(productType string) (GetSymbolsResponse, error) {
+	var res GetSymbolsResponse
 
 	params := internal.NewParams()
 	params["productType"] = productType
 
 	uri := constants.MixMarket + "/contracts"
 
-	resp, err := p.BitgetRestClient.DoGet(uri, params)
+	resp, err := s.BitgetRestClient.DoGet(uri, params)
 
-	return resp, err
+	if err != nil {
+		return res, err
+	}
 
+	if err = json.Unmarshal([]byte(resp), &res); err != nil {
+		return res, err
+	}
+
+	return res, nil
 }
 
-/**
- * Deep market
- * @param symbol
- * @param limit
- * @return ResponseResult
- */
-func (p *MixMarketClient) Depth(symbol string, limit string) (string, error) {
+type GetDepthResponse struct {
+	common.CommonResponse
+	Data []GetDepthData
+}
+
+type GetDepthData struct {
+}
+
+func (s *MixMarketService) GetDepth(symbol string, limit string) (GetDepthData, error) {
+	var res GetDepthData
 
 	params := internal.NewParams()
 	params["symbol"] = symbol
@@ -49,9 +87,16 @@ func (p *MixMarketClient) Depth(symbol string, limit string) (string, error) {
 
 	uri := constants.MixMarket + "/depth"
 
-	resp, err := p.BitgetRestClient.DoGet(uri, params)
+	resp, err := s.BitgetRestClient.DoGet(uri, params)
+	if err != nil {
+		return res, err
+	}
 
-	return resp, err
+	if err = json.Unmarshal([]byte(resp), &res); err != nil {
+		return res, err
+	}
+
+	return res, nil
 }
 
 type GetTickersResponse struct {
@@ -86,7 +131,7 @@ type GetTickerData struct {
  * @param productType
  * @return ResponseResult
  */
-func (s *MixMarketClient) GetTickers(productType string) (GetTickersResponse, error) {
+func (s *MixMarketService) GetTickers(productType string) (GetTickersResponse, error) {
 	var res GetTickersResponse
 
 	params := internal.NewParams()
@@ -116,7 +161,7 @@ type GetTickerResponse struct {
  * @param symbol
  * @return ResponseResult
  */
-func (s *MixMarketClient) GetTicker(symbol string) (GetTickerResponse, error) {
+func (s *MixMarketService) GetTicker(symbol string) (GetTickerResponse, error) {
 	var res GetTickerResponse
 
 	params := internal.NewParams()
@@ -142,7 +187,7 @@ func (s *MixMarketClient) GetTicker(symbol string) (GetTickerResponse, error) {
  * @param limit
  * @return ResponseResult
  */
-func (p *MixMarketClient) Fills(symbol string, limit string) (string, error) {
+func (s *MixMarketService) Fills(symbol string, limit string) (string, error) {
 
 	params := internal.NewParams()
 	params["symbol"] = symbol
@@ -150,7 +195,7 @@ func (p *MixMarketClient) Fills(symbol string, limit string) (string, error) {
 
 	uri := constants.MixMarket + "/fills"
 
-	resp, err := p.BitgetRestClient.DoGet(uri, params)
+	resp, err := s.BitgetRestClient.DoGet(uri, params)
 
 	return resp, err
 }
@@ -163,7 +208,7 @@ func (p *MixMarketClient) Fills(symbol string, limit string) (string, error) {
  * @param endTime
  * @return ResponseResult
  */
-func (p *MixMarketClient) Candles(symbol string, granularity string, startTime string, endTime string) (string, error) {
+func (s *MixMarketService) Candles(symbol string, granularity string, startTime string, endTime string) (string, error) {
 
 	params := internal.NewParams()
 	params["symbol"] = symbol
@@ -173,7 +218,7 @@ func (p *MixMarketClient) Candles(symbol string, granularity string, startTime s
 
 	uri := constants.MixMarket + "/candles"
 
-	resp, err := p.BitgetRestClient.DoGet(uri, params)
+	resp, err := s.BitgetRestClient.DoGet(uri, params)
 
 	return resp, err
 }
@@ -182,14 +227,14 @@ func (p *MixMarketClient) Candles(symbol string, granularity string, startTime s
 *
 获取币种指数。
 */
-func (p *MixMarketClient) Index(symbol string) (string, error) {
+func (s *MixMarketService) Index(symbol string) (string, error) {
 
 	params := internal.NewParams()
 	params["symbol"] = symbol
 
 	uri := constants.MixMarket + "/index"
 
-	resp, err := p.BitgetRestClient.DoGet(uri, params)
+	resp, err := s.BitgetRestClient.DoGet(uri, params)
 
 	return resp, err
 }
@@ -210,7 +255,7 @@ type GetNextFundingTimeData struct {
  * @param symbol
  * @return ResponseResult
  */
-func (s *MixMarketClient) GetNextFundingTime(symbol string) (GetNextFundingTimeResponse, error) {
+func (s *MixMarketService) GetNextFundingTime(symbol string) (GetNextFundingTimeResponse, error) {
 	var res GetNextFundingTimeResponse
 
 	params := internal.NewParams()
@@ -233,14 +278,14 @@ func (s *MixMarketClient) GetNextFundingTime(symbol string) (GetNextFundingTimeR
  * @param symbol
  * @return ResponseResult
  */
-func (p *MixMarketClient) MarkPrice(symbol string) (string, error) {
+func (s *MixMarketService) MarkPrice(symbol string) (string, error) {
 
 	params := internal.NewParams()
 	params["symbol"] = symbol
 
 	uri := constants.MixMarket + "/mark-price"
 
-	resp, err := p.BitgetRestClient.DoGet(uri, params)
+	resp, err := s.BitgetRestClient.DoGet(uri, params)
 
 	return resp, err
 }
@@ -253,7 +298,7 @@ func (p *MixMarketClient) MarkPrice(symbol string) (string, error) {
  * @param nextPage
  * @return ResponseResult
  */
-func (p *MixMarketClient) HistoryFundRate(symbol string, pageSize string, pageNo string, nextPage string) (string, error) {
+func (s *MixMarketService) HistoryFundRate(symbol string, pageSize string, pageNo string, nextPage string) (string, error) {
 
 	params := internal.NewParams()
 	params["symbol"] = symbol
@@ -269,7 +314,7 @@ func (p *MixMarketClient) HistoryFundRate(symbol string, pageSize string, pageNo
 
 	uri := constants.MixMarket + "/history-fundRate"
 
-	resp, err := p.BitgetRestClient.DoGet(uri, params)
+	resp, err := s.BitgetRestClient.DoGet(uri, params)
 
 	return resp, err
 }
@@ -279,14 +324,14 @@ func (p *MixMarketClient) HistoryFundRate(symbol string, pageSize string, pageNo
  * @param symbol
  * @return ResponseResult
  */
-func (p *MixMarketClient) CurrentFundRate(symbol string) (string, error) {
+func (s *MixMarketService) CurrentFundRate(symbol string) (string, error) {
 
 	params := internal.NewParams()
 	params["symbol"] = symbol
 
 	uri := constants.MixMarket + "/current-fundRate"
 
-	resp, err := p.BitgetRestClient.DoGet(uri, params)
+	resp, err := s.BitgetRestClient.DoGet(uri, params)
 
 	return resp, err
 }
@@ -296,14 +341,14 @@ func (p *MixMarketClient) CurrentFundRate(symbol string) (string, error) {
  * @param symbol
  * @return ResponseResult
  */
-func (p *MixMarketClient) OpenInterest(symbol string) (string, error) {
+func (s *MixMarketService) OpenInterest(symbol string) (string, error) {
 
 	params := internal.NewParams()
 	params["symbol"] = symbol
 
 	uri := constants.MixMarket + "/open-interest"
 
-	resp, err := p.BitgetRestClient.DoGet(uri, params)
+	resp, err := s.BitgetRestClient.DoGet(uri, params)
 
 	return resp, err
 }

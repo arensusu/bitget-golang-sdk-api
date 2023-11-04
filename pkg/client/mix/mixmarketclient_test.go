@@ -11,19 +11,94 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestMixMarketClient_Contracts(t *testing.T) {
+func TestMixMarketGetSymbols(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
+	uri := constants.MixMarket + "/contracts"
+	params := map[string]string{"productType": "umcbl"}
+
+	data := `{
+		"code": "00000",
+		"msg": "success",
+		"requestTime": "1698998744571",
+		"data":[
+			{
+				"baseCoin": "TIA",
+				"buyLimitPriceRatio": "0.02",
+				"feeRateUpRatio": "0.005",
+				"limitOpenTime": "-1",
+				"maintainTime": "",
+				"makerFeeRate": "0.0002",
+				"maxOrderNum": "400",
+				"maxPositionNum": "150",
+				"minTradeNum": "0.1",
+				"minTradeUSDT": "5",
+				"offTime": "-1",
+				"openCostUpRatio": "0.01",
+				"priceEndStep": "1",
+				"pricePlace": "4",
+				"quoteCoin": "USDT",
+				"sellLimitPriceRatio": "0.02",
+				"sizeMultiplier": "0.1",
+				"supportMarginCoins": [
+					"USDT"
+				],
+				"symbol": "TIAUSDT_UMCBL",
+				"symbolName": "TIAUSDT",
+				"symbolStatus": "normal",
+				"symbolType": "perpetual",
+				"takerFeeRate": "0.0006",
+				"volumePlace": "1"
+			}
+		]
+	}`
+
 	mockClient := mocks.NewMockRestClient(ctrl)
-	client := NewMixMarketClient(mockClient)
+	mockClient.EXPECT().DoGet(uri, params).Return(data, nil)
 
-	resp, err := client.Contracts("sdmcbl")
-
-	if err != nil {
-		println(err.Error())
+	expect := GetSymbolsResponse{
+		CommonResponse: common.CommonResponse{
+			Code: "00000",
+			Msg:  "success",
+			//RequestTime: "1698998744571",
+		},
+		Data: []GetSymbolsData{
+			{
+				BaseCoin:            "TIA",
+				BuyLimitPriceRatio:  "0.02",
+				FeeRateUpRatio:      "0.005",
+				LimitOpenTime:       "-1",
+				MaintainTime:        "",
+				MakerFeeRate:        "0.0002",
+				MaxOrderNum:         "400",
+				MaxPositionNum:      "150",
+				MinTradeNum:         "0.1",
+				MinTradeUSDT:        "5",
+				OffTime:             "-1",
+				OpenCostUpRatio:     "0.01",
+				PriceEndStep:        "1",
+				PricePlace:          "4",
+				QuoteCoin:           "USDT",
+				SellLimitPriceRatio: "0.02",
+				SizeMultiplier:      "0.1",
+				SupportMarginCoins:  []string{"USDT"},
+				Symbol:              "TIAUSDT_UMCBL",
+				SymbolName:          "TIAUSDT",
+				SymbolStatus:        "normal",
+				SymbolType:          "perpetual",
+				TakerFeeRate:        "0.0006",
+				VolumePlace:         "1",
+			},
+		},
 	}
-	fmt.Println(resp)
+
+	service := NewMixMarketService(mockClient)
+	res, err := service.GetSymbols(params["productType"])
+
+	assert.NoError(t, err)
+	assert.Equal(t, expect, res)
+
 }
 
 func TestMixMarketClient_Depth(t *testing.T) {
@@ -31,9 +106,9 @@ func TestMixMarketClient_Depth(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockClient := mocks.NewMockRestClient(ctrl)
-	client := NewMixMarketClient(mockClient)
+	client := NewMixMarketService(mockClient)
 
-	resp, err := client.Depth("BTCUSDT_UMCBL", "20")
+	resp, err := client.GetDepth("BTCUSDT_UMCBL", "20")
 
 	if err != nil {
 		println(err.Error())
@@ -107,7 +182,7 @@ func TestMixMarketClient_Ticker(t *testing.T) {
 		},
 	}
 
-	service := NewMixMarketClient(mockClient)
+	service := NewMixMarketService(mockClient)
 	res, err := service.GetTicker(params["symbol"])
 
 	assert.NoError(t, err)
@@ -185,7 +260,7 @@ func TestMixMarketGetTickers(t *testing.T) {
 		},
 	}
 
-	service := NewMixMarketClient(mockClient)
+	service := NewMixMarketService(mockClient)
 	res, err := service.GetTickers(params["productType"])
 
 	assert.NoError(t, err)
@@ -198,7 +273,7 @@ func TestMixMarketClient_Fills(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockClient := mocks.NewMockRestClient(ctrl)
-	client := NewMixMarketClient(mockClient)
+	client := NewMixMarketService(mockClient)
 
 	resp, err := client.Fills("BTCUSDT_UMCBL", "20")
 
@@ -213,7 +288,7 @@ func TestMixMarketClient_Candles(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockClient := mocks.NewMockRestClient(ctrl)
-	client := NewMixMarketClient(mockClient)
+	client := NewMixMarketService(mockClient)
 
 	resp, err := client.Candles("BTCUSDT_UMCBL", "60", "1629177891000", "1629181491000")
 
@@ -228,7 +303,7 @@ func TestMixMarketClient_Index(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockClient := mocks.NewMockRestClient(ctrl)
-	client := NewMixMarketClient(mockClient)
+	client := NewMixMarketService(mockClient)
 
 	resp, err := client.Index("BTCUSDT_UMCBL")
 
@@ -272,7 +347,7 @@ func TestGetNextFundingTime(t *testing.T) {
 		},
 	}
 
-	service := NewMixMarketClient(mockClient)
+	service := NewMixMarketService(mockClient)
 	res, err := service.GetNextFundingTime(params["symbol"])
 
 	assert.NoError(t, err)
@@ -284,7 +359,7 @@ func TestMixMarketClient_HistoryFundRate(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockClient := mocks.NewMockRestClient(ctrl)
-	client := NewMixMarketClient(mockClient)
+	client := NewMixMarketService(mockClient)
 
 	resp, err := client.HistoryFundRate("BTCUSDT_UMCBL", "10", "1", "true")
 
@@ -299,7 +374,7 @@ func TestMixMarketClient_CurrentFundRate(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockClient := mocks.NewMockRestClient(ctrl)
-	client := NewMixMarketClient(mockClient)
+	client := NewMixMarketService(mockClient)
 
 	resp, err := client.CurrentFundRate("BTCUSDT_UMCBL")
 
@@ -314,7 +389,7 @@ func TestMixMarketClient_OpenInterest(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockClient := mocks.NewMockRestClient(ctrl)
-	client := NewMixMarketClient(mockClient)
+	client := NewMixMarketService(mockClient)
 
 	resp, err := client.OpenInterest("BTCUSDT_UMCBL")
 
